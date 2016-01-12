@@ -353,7 +353,6 @@ public class CommonDAO {
         PreparedStatement preStatUpdatePro = null;
         PreparedStatement preStatInsertProDesc = null;
         
-//        String updateProduct = "INSERT INTO product(pro_name, pro_description, supplier_id) VALUES(?,?,?)";
         String updateProduct = "UPDATE product SET pro_name =?, pro_description =?, supplier_id =? WHERE pro_id = ?";
         String insertProductDetails = "INSERT INTO product_details(pro_id, batch_id, unit_size, discount, retail_price, whole_sale_price) "
                 + "VALUES(?,?,?,?,?,?)";
@@ -369,10 +368,6 @@ public class CommonDAO {
             preStatUpdatePro.setInt(3, product.getSupplierId());
             preStatUpdatePro.setInt(4, pro_id);
             preStatUpdatePro.executeUpdate();
-//            ResultSet rs = preStatInsertPro.getGeneratedKeys();
-//            if (rs.next()) {
-//                pro_id = rs.getInt(1);
-//            }
 
             preStatInsertProDesc = dbCon.prepareStatement(insertProductDetails);
             preStatInsertProDesc.setInt(1, pro_id);

@@ -15,14 +15,22 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
+import pharmasoft.db.dao.TransactionDAO;
+import pharmasoft.db.model.RetailSale;
 import pharmasoft.ui.util.UiSupliment;
+import pharmasoft.util.StringFormatter;
 
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Vector;
 import java.awt.event.ActionEvent;
 
 public class FrmCashierOrder extends JInternalFrame {
+	
 	private JTable tblTrans;
+    private TransactionDAO transDAO;
 
 	/**
 	 * Launch the application.
@@ -45,6 +53,7 @@ public class FrmCashierOrder extends JInternalFrame {
 	 */
 	public FrmCashierOrder(Dimension innerPannel) {
 		initComponents();
+        transDAO = new TransactionDAO();
         Dimension localFrm = UiSupliment.getFormLocation(innerPannel, this.getSize());
         this.setClosable(true);
         this.setMaximizable(true);
@@ -131,20 +140,21 @@ public class FrmCashierOrder extends JInternalFrame {
 		model.getDataVector().removeAllElements();
 		tblTrans.repaint();
 
-		DefaultTableCellRenderer renderer = new DefaultTableCellRenderer();
-        model.addRow(new Object[]{"0001", "2015-01-15", "5", "545.00"});
-//		if (transList != null && !transList.isEmpty()) {
-//			for (Iterator<RetailSale> it = transList.iterator(); it.hasNext();) {
-//				RetailSale proxy = it.next();
-//				model.addRow(new Object[] { proxy.getReciptId(), proxy.getReciptDate(), proxy.getDiscount(),
-//						StringFormatter.formatToRupees(proxy.getTotalAmount()) });
-//				renderer.setHorizontalAlignment(DefaultTableCellRenderer.RIGHT);
-//				tblTrans.getColumnModel().getColumn(0).setCellRenderer(renderer);
-//				tblTrans.getColumnModel().getColumn(1).setCellRenderer(renderer);
-//				tblTrans.getColumnModel().getColumn(2).setCellRenderer(renderer);
-//				tblTrans.getColumnModel().getColumn(3).setCellRenderer(renderer);
-//
-//			}
-//		}
+		Vector<RetailSale> transList = transDAO.getTransactions();
+        DefaultTableCellRenderer renderer = new DefaultTableCellRenderer();
+        if (transList != null && !transList.isEmpty()) {
+            for (Iterator<RetailSale> it = transList.iterator(); it.hasNext();) {
+                RetailSale proxy = it.next();
+                model.addRow(new Object[]{proxy.getReciptId(), proxy.getReciptDate(), proxy.getDiscount(), 
+                    StringFormatter.formatToRupees(proxy.getTotalAmount())});
+                renderer.setHorizontalAlignment(DefaultTableCellRenderer.RIGHT);
+                tblTrans.getColumnModel().getColumn(0).setCellRenderer(renderer);
+                tblTrans.getColumnModel().getColumn(1).setCellRenderer(renderer);
+                tblTrans.getColumnModel().getColumn(2).setCellRenderer(renderer);
+                tblTrans.getColumnModel().getColumn(3).setCellRenderer(renderer);
+
+            }
+        }
+        
 	}
 }

@@ -299,6 +299,27 @@ public class TransactionDataAccess {
         }
         return dataMap;
     }
+    
+    public Vector<RetailSale> getTransactions(String sql) {
+        ResultSet resultSet = null;
+        Vector<RetailSale> list = new Vector<RetailSale>();
+        RetailSale proxy;
+        try {
+            resultSet = getResultSet(sql);
+            while (resultSet.next()) {
+                proxy = new RetailSale();
+                proxy.setReciptId(resultSet.getInt("recipt_id"));
+                proxy.setTotalAmount(resultSet.getInt("total_amount"));
+                proxy.setDiscount(resultSet.getInt("discount"));
+                proxy.setReciptDate(resultSet.getDate("recipt_date"));
+
+                list.add(proxy);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return list;
+    }
 
     public ResultSet getResultSet(String sql) {
         Statement statement = null;

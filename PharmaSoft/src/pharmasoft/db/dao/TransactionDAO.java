@@ -86,4 +86,11 @@ public class TransactionDAO {
 
         return transDataAccess.getWSTransactionsByDate(sqlStr.toString(), pageSize, startNo);
     }
+     
+     public Vector<RetailSale> getTransactions() {
+         StringBuffer sqlStr = null;
+         sqlStr = new StringBuffer("SELECT * FROM retail_sale rs ");
+
+         return transDataAccess.getTransactions(sqlStr.toString());
+     }
 }
