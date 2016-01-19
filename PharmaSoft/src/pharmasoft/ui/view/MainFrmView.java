@@ -274,7 +274,7 @@ public class MainFrmView extends JFrame {
 						frmCashierOrder.toFront();
 						frmCashierOrder.setSelected(true);
 					} else {
-						frmCashierOrder = new FrmCashierOrder(innerPannel.getSize());
+						frmCashierOrder = new FrmCashierOrder(innerPannel);
 						innerPannel.add(frmCashierOrder);
 
 						frmCashierOrder.setLocation((int) getLocalFrmDimension(frmCashierOrder).getWidth(), (int) getLocalFrmDimension(frmCashierOrder).getHeight());

@@ -21,7 +21,11 @@ import pharmasoft.ui.util.UiSupliment;
 import pharmasoft.util.StringFormatter;
 
 import javax.swing.JButton;
+import javax.swing.JDesktopPane;
+
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Vector;
@@ -31,6 +35,7 @@ public class FrmCashierOrder extends JInternalFrame {
 	
 	private JTable tblTrans;
     private TransactionDAO transDAO;
+    private JDesktopPane innerPanel;
 
 	/**
 	 * Launch the application.
@@ -51,15 +56,17 @@ public class FrmCashierOrder extends JInternalFrame {
 	/**
 	 * Create the frame.
 	 */
-	public FrmCashierOrder(Dimension innerPannel) {
+	public FrmCashierOrder(JDesktopPane innerPannel) {
 		initComponents();
         transDAO = new TransactionDAO();
-        Dimension localFrm = UiSupliment.getFormLocation(innerPannel, this.getSize());
+        innerPanel = innerPannel;
+        Dimension localFrm = UiSupliment.getFormLocation(innerPannel.getSize(), this.getSize());
         this.setClosable(true);
         this.setMaximizable(true);
         this.setResizable(true);
         this.setIconifiable(true);
         this.setLocation((int) localFrm.getWidth(), (int) localFrm.getHeight());
+        createEvents();
 
 	}
 
@@ -70,6 +77,8 @@ public class FrmCashierOrder extends JInternalFrame {
 		jScrollPane.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
 		
 		tblTrans = new JTable();
+		tblTrans.setFocusable(false);
+		tblTrans.setRowSelectionAllowed(true);
 		tblTrans.setModel(new javax.swing.table.DefaultTableModel(
                 new Object [][] {
 
@@ -77,7 +86,12 @@ public class FrmCashierOrder extends JInternalFrame {
                 new String [] {
                     "RECIPT ID", "RECIPT DATE", "DISCOUNT", "TOTAL AMOUNT"
                 }
-            ));
+            ) { 
+		    @Override
+		    public boolean isCellEditable(int row, int column) {
+		        return false;
+		    }
+		});
 		jScrollPane.setViewportView(tblTrans);
 		
 		JPanel panel = new JPanel();
@@ -135,6 +149,21 @@ public class FrmCashierOrder extends JInternalFrame {
 		
 	}
 	
+	private void createEvents() {
+		tblTrans.addMouseListener(new MouseAdapter() {
+			  public void mouseClicked(MouseEvent e) {
+			     if (e.getClickCount() == 2) { 
+			        	FrmViewRetailTransaction frmViewRtTrans = new FrmViewRetailTransaction(innerPanel.getSize());
+			        	innerPanel.add(frmViewRtTrans);	        	
+						frmViewRtTrans.setLocation((int) getLocalFrmDimension(frmViewRtTrans).getWidth(), (int) getLocalFrmDimension(frmViewRtTrans).getHeight());
+						frmViewRtTrans.show();
+						
+			            System.out.println(tblTrans.getValueAt(tblTrans.getSelectedRow(), 0).toString());
+			     }
+			   }
+			});		
+	}
+	
 	public void refrshTrnTable() {
 		DefaultTableModel model = (DefaultTableModel) tblTrans.getModel();
 		model.getDataVector().removeAllElements();
@@ -156,5 +185,12 @@ public class FrmCashierOrder extends JInternalFrame {
             }
         }
         
+	}
+	
+	private Dimension getLocalFrmDimension(JInternalFrame frame) {
+		Dimension localFrm = null;
+		if (innerPanel != null)
+			localFrm = UiSupliment.getFormLocation(innerPanel.getSize(), frame.getSize());
+		return localFrm;
 	}
 }
