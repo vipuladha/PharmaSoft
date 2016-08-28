@@ -19,6 +19,9 @@ import java.awt.event.WindowListener;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import javax.swing.BorderFactory;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
@@ -27,6 +30,7 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import pharmasoft.db.dao.CommonDAO;
+import pharmasoft.db.dao.TransactionDAO;
 import pharmasoft.db.model.Product;
 import pharmasoft.db.proxyClasses.TransDetailsProxy;
 import pharmasoft.ui.util.ListTableModel;
@@ -42,6 +46,7 @@ public class FrmTransaction extends javax.swing.JInternalFrame implements ListSe
     private int productId;
     private int batchId;
     private CommonDAO commonDAO;
+    private TransactionDAO transDAO;
     private List<TransDetailsProxy> tableRowContent = new ArrayList<TransDetailsProxy>();
     private long grandTotal;
     private TransDetailsProxy transProxy;
@@ -69,6 +74,7 @@ public class FrmTransaction extends javax.swing.JInternalFrame implements ListSe
         initComponents(); 
         txtProductCode.setFocusTraversalKeysEnabled(false);
         commonDAO = new CommonDAO();
+        transDAO = new TransactionDAO();
         this.setClosable(true);
         this.setMaximizable(true);
         this.setResizable(true);
@@ -340,8 +346,14 @@ public class FrmTransaction extends javax.swing.JInternalFrame implements ListSe
 
     private void btnPayKeyPressed(java.awt.event.KeyEvent evt) {                                  
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-            FrmPayment frmPayment = new FrmPayment(this.grandTotal, tableRowContent, this);
-            frmPayment.setVisible(true);
+        	try {
+//            	transDAO.insertTransaction(this.grandTotal, tableRowContent);
+            	FrmSendToCashier frmSend = new FrmSendToCashier(this.grandTotal, null, this);
+                frmSend.setVisible(true);
+                
+        	} catch(Exception ex){
+        		Logger.getLogger(FrmAddNewProductBatch.class.getName()).log(Level.SEVERE, null, ex);
+        	}
            
         }       
     }                                 
