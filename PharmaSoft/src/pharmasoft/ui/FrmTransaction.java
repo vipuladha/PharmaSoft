@@ -347,9 +347,10 @@ public class FrmTransaction extends javax.swing.JInternalFrame implements ListSe
     private void btnPayKeyPressed(java.awt.event.KeyEvent evt) {                                  
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
         	try {
+        		commonDAO.getNextSerial("TRANSACTION_ID");
 //            	transDAO.insertTransaction(this.grandTotal, tableRowContent);
-            	FrmSendToCashier frmSend = new FrmSendToCashier(this.grandTotal, null, this);
-                frmSend.setVisible(true);
+//            	FrmSendToCashier frmSend = new FrmSendToCashier(this.grandTotal, null, this);
+//                frmSend.setVisible(true);
                 
         	} catch(Exception ex){
         		Logger.getLogger(FrmAddNewProductBatch.class.getName()).log(Level.SEVERE, null, ex);
