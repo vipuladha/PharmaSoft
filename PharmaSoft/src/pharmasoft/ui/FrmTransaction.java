@@ -349,31 +349,35 @@ public class FrmTransaction extends javax.swing.JInternalFrame implements ListSe
 
     private void btnPayKeyPressed(java.awt.event.KeyEvent evt) {                                  
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-        	try {
-//        		String genId = idGenDAO.getNextSerial("TRANSACTION_ID");
-//        		System.out.println(genId);
-            	String transId = transDAO.insertTransaction(this.grandTotal, tableRowContent);
-            	if (transId != null){          		
-                	FrmSendToCashier frmSend = new FrmSendToCashier(this.grandTotal, transId, this);
-                    frmSend.setVisible(true);
-            	}
-                
-        	} catch(Exception ex){
-        		Logger.getLogger(FrmAddNewProductBatch.class.getName()).log(Level.SEVERE, null, ex);
-        	}
-           
+        	insertData();
+        
         }       
     }                                 
 
     private void btnPayActionPerformed(java.awt.event.ActionEvent evt) {                                       
-            FrmPayment frmPayment = new FrmPayment(this.grandTotal, tableRowContent, this);
-            frmPayment.setVisible(true);
+//            FrmPayment frmPayment = new FrmPayment(this.grandTotal, tableRowContent, this);
+//            frmPayment.setVisible(true);
     }                                      
 
     private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {                                          
             dispose();
     }                                         
 
+    private void insertData() {
+    	try {
+    		if (tblTransaction.getRowCount() > 0 ) {
+            	String transId = transDAO.insertTransaction(this.grandTotal, tableRowContent);
+            	if (transId != null){          		
+                	FrmSendToCashier frmSend = new FrmSendToCashier(this.grandTotal, transId, this);
+                    frmSend.setVisible(true);
+            	}
+    		}
+            
+    	} catch(Exception ex){
+    		Logger.getLogger(FrmAddNewProductBatch.class.getName()).log(Level.SEVERE, null, ex);
+    	}
+    }
+    
     private long getSubTotalValue(){
         int row = tblTransaction.getRowCount();
         long subTotal = 0;

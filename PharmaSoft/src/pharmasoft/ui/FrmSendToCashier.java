@@ -90,15 +90,6 @@ public class FrmSendToCashier extends javax.swing.JDialog {
             	dispose();
         	}
         });
-        btnCancel = new javax.swing.JButton();
-        btnCancel.addKeyListener(new KeyAdapter() {
-        	@Override
-        	public void keyPressed(KeyEvent evt) {
-                if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-                	dispose();
-                }
-        	}
-        });
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("SEND TO CASHIER");
@@ -170,36 +161,22 @@ public class FrmSendToCashier extends javax.swing.JDialog {
             }
         });
 
-        btnCancel.setText("Cancel");
-        btnCancel.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        btnCancel.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnCancelActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(93, 93, 93)
-                .addComponent(btnOk, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(57, 57, 57)
-                .addComponent(btnCancel, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(92, Short.MAX_VALUE))
+        	jPanel2Layout.createParallelGroup(Alignment.LEADING)
+        		.addGroup(jPanel2Layout.createSequentialGroup()
+        			.addGap(157)
+        			.addComponent(btnOk, GroupLayout.PREFERRED_SIZE, 79, GroupLayout.PREFERRED_SIZE)
+        			.addContainerGap(164, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnOk, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnCancel, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(19, 19, 19))
+        	jPanel2Layout.createParallelGroup(Alignment.TRAILING)
+        		.addGroup(Alignment.LEADING, jPanel2Layout.createSequentialGroup()
+        			.addContainerGap()
+        			.addComponent(btnOk, GroupLayout.PREFERRED_SIZE, 40, GroupLayout.PREFERRED_SIZE)
+        			.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-
-        jPanel2Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {btnCancel, btnOk});
+        jPanel2.setLayout(jPanel2Layout);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         layout.setHorizontalGroup(
@@ -241,38 +218,21 @@ public class FrmSendToCashier extends javax.swing.JDialog {
 //        }
     }
     
-    private void clearTrnTable() {
-        DefaultTableModel model = null;
-        int rowCount = 0;
-        if (frmType instanceof FrmTransaction) {
-            FrmTransaction frmTrn = (FrmTransaction) frmType;
-            model = (DefaultTableModel) frmTrn.tblTransaction.getModel();
-            rowCount = model.getRowCount();
-            frmTrn.txtProductCode.requestFocus();
-        } else if (frmType instanceof FrmPurchaseOrder) {
-            FrmPurchaseOrder frmTrn = (FrmPurchaseOrder) frmType;
-            model = (DefaultTableModel) frmTrn.tblTransaction.getModel();
-            rowCount = model.getRowCount();
-            frmTrn.txtProductCode.requestFocus();
-        } else if (frmType instanceof FrmWholeSaleTransaction) {
-            FrmWholeSaleTransaction frmTrn = (FrmWholeSaleTransaction) frmType;
-            model = (DefaultTableModel) frmTrn.tblTransaction.getModel();
-            rowCount = model.getRowCount();
-            frmTrn.txtProductCode.requestFocus();
-        }
-        
-        for (int i = rowCount - 1 ; i >= 0; i--) {
-            model.removeRow(i);
-        }
-    }
-    
+	private void clearTrnTable() {
+		DefaultTableModel model = null;
+		int rowCount = 0;
+		FrmTransaction frmTrn = (FrmTransaction) frmType;
+		model = (DefaultTableModel) frmTrn.tblTransaction.getModel();
+		rowCount = model.getRowCount();
 
-    private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {                                          
-            dispose();
-    }                                         
-
-    // Variables declaration - do not modify                     
-    private javax.swing.JButton btnCancel;
+		for (int i = rowCount - 1; i >= 0; i--) {
+			model.removeRow(i);
+		}
+		
+		frmTrn.txtProductCode.grabFocus();
+	}
+	
+	
     private javax.swing.JButton btnOk;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
