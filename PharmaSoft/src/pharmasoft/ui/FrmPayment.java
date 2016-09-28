@@ -304,7 +304,7 @@ public class FrmPayment extends javax.swing.JDialog {
         boolean flag = false;
         try {
             if (frmType instanceof FrmTransaction) {
-                flag = transDAO.insertTransaction(this.grandTotal, this.getTableRowContent());
+//                flag = transDAO.insertTransaction(this.grandTotal, this.getTableRowContent());
             } else if (frmType instanceof FrmWholeSaleTransaction) {
                 FrmWholeSaleTransaction frm = (FrmWholeSaleTransaction) frmType;
                 flag = transDAO.inserWholeSaleTrans(this.grandTotal, this.getTableRowContent(), frm.getCustomerId());               

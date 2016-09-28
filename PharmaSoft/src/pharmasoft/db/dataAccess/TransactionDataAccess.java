@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 import pharmasoft.db.dao.CommonDAO;
+import pharmasoft.db.dao.IdGeneratorDAO;
 import pharmasoft.db.dao.ProductDAO;
 import pharmasoft.db.model.Product;
 import pharmasoft.db.model.RetailSale;
@@ -33,54 +34,64 @@ public class TransactionDataAccess {
     
     DataBaseConnection dbConnection;
     CommonDAO commonDAO;
+    IdGeneratorDAO idGenDAO;
 
     public TransactionDataAccess() {
         dbConnection = new DataBaseConnection();
         commonDAO = new CommonDAO();
+        idGenDAO = new IdGeneratorDAO();
     }
     
-    public boolean insertTransaction(long grandTotal, List<TransDetailsProxy> transDetails,
-            String insertRetSale, String insertRetSaleDetail, int cusId) throws SQLException {
+    public String insertTransaction(long grandTotal, List<TransDetailsProxy> transDetails,
+            String insertRetSale, String insertRetSaleDetail, String transType, String status, int cusId) throws SQLException {
         Connection dbCon = null;
         PreparedStatement preStatInsertRetS = null;
         PreparedStatement preStatinsertRetSDetails = null;
         try {
-            int trnId = 0;
+//            int trnId = 0;
             dbCon = dbConnection.getConnection();
 
             dbCon.setAutoCommit(false);
 
             preStatInsertRetS = dbCon.prepareStatement(insertRetSale, Statement.RETURN_GENERATED_KEYS);
-            preStatInsertRetS.setLong(1, grandTotal);
-            preStatInsertRetS.setLong(2, 0);
-            preStatInsertRetS.setDate(3, new java.sql.Date(new Date().getTime()));
+            String trnId = idGenDAO.getNextSerial("TRANSACTION_ID");
+            preStatInsertRetS.setString(1, trnId);
+            preStatInsertRetS.setLong(2, grandTotal);
+            preStatInsertRetS.setLong(3, 0);
+            preStatInsertRetS.setDate(4, new java.sql.Date(new Date().getTime()));
+            preStatInsertRetS.setString(5, transType);
+            preStatInsertRetS.setString(6, status);
             if (cusId > 0)
-                 preStatInsertRetS.setInt(4, cusId);
+                 preStatInsertRetS.setInt(7, cusId);
             preStatInsertRetS.executeUpdate();
-            ResultSet rs = preStatInsertRetS.getGeneratedKeys();
-            if (rs.next()) {
-                trnId = rs.getInt(1);
-            }
+            idGenDAO.updateNextSequence("TRANSACTION_ID");
+//            ResultSet rs = preStatInsertRetS.getGeneratedKeys();
+//            if (rs.next()) {
+//                trnId = rs.getInt(1);
+//            }
 
             for (Iterator<TransDetailsProxy> it = transDetails.iterator(); it.hasNext();) {
                 TransDetailsProxy transProxy = it.next();
                 updateInventory(transProxy.getProId(), transProxy.getBatchId(), transProxy.getQuentity(), false);
                 
                 preStatinsertRetSDetails = dbCon.prepareStatement(insertRetSaleDetail);
-                preStatinsertRetSDetails.setLong(1, transProxy.getUnitPrice());
-                preStatinsertRetSDetails.setInt(2, transProxy.getQuentity());
-                preStatinsertRetSDetails.setLong(3, transProxy.getSubTotal());
-                preStatinsertRetSDetails.setLong(4, trnId);
-                preStatinsertRetSDetails.setLong(5, transProxy.getProId());
+                String trnDetailId = idGenDAO.getNextSerial("TRANSACTION_DETAIL_ID");
+                preStatinsertRetSDetails.setString(1, trnDetailId);
+                preStatinsertRetSDetails.setLong(2, transProxy.getUnitPrice());
+                preStatinsertRetSDetails.setInt(3, transProxy.getQuentity());
+                preStatinsertRetSDetails.setLong(4, transProxy.getSubTotal());
+                preStatinsertRetSDetails.setString(5, trnId);
+                preStatinsertRetSDetails.setInt(6, transProxy.getProId());
                 preStatinsertRetSDetails.executeUpdate();
+                idGenDAO.updateNextSequence("TRANSACTION_DETAIL_ID");
             }
 
             dbCon.commit();
-            return true;
+            return trnId;
         } catch (SQLException e) {
             System.out.println(e.getMessage());
             dbCon.rollback();
-            return false;
+            return null;
         } finally {
             if (preStatInsertRetS != null) {
                 preStatInsertRetS.close();

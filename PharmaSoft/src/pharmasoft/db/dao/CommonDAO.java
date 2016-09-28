@@ -39,16 +39,15 @@ public class CommonDAO {
 
     }
 
-    public void getNextSerial (String idType) {
+/*    public String getNextSerial (String idType) {
     	Date todayDate = new Date();
     	SimpleDateFormat sdf = new SimpleDateFormat("MMddyyyy");
     	String strDate = sdf.format(todayDate);
     	String nxtSeqNo = String.valueOf(getNextSequence(idType));
     	String id = strDate + nxtSeqNo;
     	String genId = StringFormatter.padLeft(id, 12, "0");   	
-    	System.out.println(genId);
     	
-    	boolean flag = updateNextSequence(idType);
+    	return genId;
     }
     
     public int getNextSequence (String idType) {
@@ -99,7 +98,7 @@ public class CommonDAO {
 		}
 
 		return ret;
-	}
+	}*/
     
     public boolean addNewSupplier(Supplier supplier) {
 

@@ -30,11 +30,11 @@ public class TransactionDAO {
 
     }
     
-    public boolean insertTransaction(long grandTotal, List<TransDetailsProxy> transDetails) throws SQLException {
-        String insertRetSale = "INSERT INTO transaction(tran_id, total_amount, discount, recipt_date, trn_type, time_stamp) VALUES(?,?,?,?,?)";
+    public String insertTransaction(long grandTotal, List<TransDetailsProxy> transDetails) throws SQLException {
+        String insertRetSale = "INSERT INTO transaction(tran_id, total_amount, discount, recipt_date, trn_type, status) VALUES(?,?,?,?,?,?)";
         String insertRetSaleDetails = "INSERT INTO transaction_details(trns_detail_id, unit_price, quantity, sub_total, trans_id, pro_id) VALUES(?,?,?,?,?,?)";
 
-        return transDataAccess.insertTransaction(grandTotal, transDetails, insertRetSale, insertRetSaleDetails, -1);
+        return transDataAccess.insertTransaction(grandTotal, transDetails, insertRetSale, insertRetSaleDetails, "RS", "SENT", -1);
     }
     
 //    public boolean insertTransaction(long grandTotal, List<TransDetailsProxy> transDetails) throws SQLException {
@@ -48,7 +48,8 @@ public class TransactionDAO {
         String insertRetSale = "INSERT INTO whole_sale(total_amount, discount, recipt_date, customer_id) VALUES(?,?,?,?)";
         String insertRetSaleDetails = "INSERT INTO whole_sale_details(unit_price, quantity, sub_total, invoice_id, pro_id) VALUES(?,?,?,?,?)";
 
-        return transDataAccess.insertTransaction(grandTotal, transDetails, insertRetSale, insertRetSaleDetails, cusId);
+//        return transDataAccess.insertTransaction(grandTotal, transDetails, insertRetSale, insertRetSaleDetails, "WS", "SENT", cusId);
+        return false;
     }
     
      public boolean insertPurchaseTrans(TransPurchDetailsProxy proxy, List<TransDetailsProxy> transDetails) throws SQLException {

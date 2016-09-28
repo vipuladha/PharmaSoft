@@ -31,6 +31,9 @@ import javax.swing.GroupLayout;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.SwingConstants;
 import java.awt.Component;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyAdapter;
 
 /**
  *
@@ -42,11 +45,11 @@ public class FrmSendToCashier extends javax.swing.JDialog {
     private TransactionDAO transDAO;
     private Object frmType;
     private long grandTotal;
-    private String reciptNo;
+    private String transId;
     
 
     /** Creates new form FrmPayment */
-    public FrmSendToCashier(long subTotal, String reciptNo, Object frmType) {
+    public FrmSendToCashier(long subTotal, String transId, Object frmType) {
         initComponents();
         commonDAO = new CommonDAO();
         transDAO = new TransactionDAO();
@@ -54,8 +57,9 @@ public class FrmSendToCashier extends javax.swing.JDialog {
         this.setLocation(500, 330);
         this.grandTotal = subTotal;
         this.lblGrandTotal.setText(StringFormatter.formatToRupees(subTotal));
+        this.lblReciptNoValue.setText(transId);
         this.frmType = frmType;
-        reciptNo = reciptNo;
+        transId = transId;
  
     }
     
@@ -80,7 +84,21 @@ public class FrmSendToCashier extends javax.swing.JDialog {
         lblReciptNo = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         btnOk = new javax.swing.JButton();
+        btnOk.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent arg0) {
+            	clearTrnTable();
+            	dispose();
+        	}
+        });
         btnCancel = new javax.swing.JButton();
+        btnCancel.addKeyListener(new KeyAdapter() {
+        	@Override
+        	public void keyPressed(KeyEvent evt) {
+                if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+                	dispose();
+                }
+        	}
+        });
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("SEND TO CASHIER");
@@ -209,7 +227,8 @@ public class FrmSendToCashier extends javax.swing.JDialog {
 
     private void btnOkKeyPressed(java.awt.event.KeyEvent evt) {                                 
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-          insertTransaction();
+        	clearTrnTable();
+        	dispose();
         }
     }                                
 
