@@ -23,7 +23,14 @@ import pharmasoft.db.proxyClasses.TransPurchDetailsProxy;
  * @author Vipula
  */
 public class TransactionDAO {
+	
     private TransactionDataAccess transDataAccess;
+    private String SENT = "SENT";
+    private String COMPLETE = "COMPLETE";
+    private String PROCESSED = "PROCESSED";
+    
+    private String TRANS_TYPE_RETAIL = "RS";
+    private String TRANS_TYPE_WHOLE = "WS";
 
     public TransactionDAO() {
         transDataAccess = new TransactionDataAccess();
@@ -34,7 +41,7 @@ public class TransactionDAO {
         String insertRetSale = "INSERT INTO transaction(tran_id, total_amount, discount, recipt_date, trn_type, status) VALUES(?,?,?,?,?,?)";
         String insertRetSaleDetails = "INSERT INTO transaction_details(trns_detail_id, unit_price, quantity, sub_total, trans_id, pro_id) VALUES(?,?,?,?,?,?)";
 
-        return transDataAccess.insertTransaction(grandTotal, transDetails, insertRetSale, insertRetSaleDetails, "RS", "SENT", -1);
+        return transDataAccess.insertTransaction(grandTotal, transDetails, insertRetSale, insertRetSaleDetails, TRANS_TYPE_RETAIL, SENT, -1);
     }
     
 //    public boolean insertTransaction(long grandTotal, List<TransDetailsProxy> transDetails) throws SQLException {
