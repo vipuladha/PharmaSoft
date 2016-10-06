@@ -26,6 +26,7 @@ import pharmasoft.db.proxyClasses.TransDetailsProxy;
 import pharmasoft.db.proxyClasses.TransPurchDetailsProxy;
 import pharmasoft.ui.util.UiSupliment;
 import pharmasoft.util.StringFormatter;
+import javax.swing.DefaultComboBoxModel;
 
 /**
  *
@@ -122,7 +123,7 @@ public class FrmPayment extends javax.swing.JDialog {
         lblPayType.setFont(new java.awt.Font("Times New Roman", 1, 14));
         lblPayType.setText("Payment Type");
 
-        cmbPayType.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Cash", "Cheque" }));
+        cmbPayType.setModel(new DefaultComboBoxModel(new String[] {"Cash", "Cheque", "Credit"}));
         cmbPayType.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cmbPayTypeActionPerformed(evt);
@@ -278,9 +279,10 @@ public class FrmPayment extends javax.swing.JDialog {
     private void txtReceivedAmountKeyPressed(java.awt.event.KeyEvent evt) {                                             
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
             long receivedAmount = 0;
-            if (frmType instanceof FrmWholeSaleTransaction) {
-               btnOk.requestFocus();
-            } else if (txtReceivedAmount.getText() != null && !txtReceivedAmount.getText().isEmpty()) {
+//            if (frmType instanceof FrmWholeSaleTransaction) {
+//               btnOk.requestFocus();
+//            } else 
+            if (txtReceivedAmount.getText() != null && !txtReceivedAmount.getText().isEmpty()) {
                 receivedAmount = StringFormatter.rupeesToLong(txtReceivedAmount.getText());
                 txtReceivedAmount.setText(StringFormatter.formatToRupees(receivedAmount));
                 if (receivedAmount > grandTotal) {
@@ -367,11 +369,11 @@ public class FrmPayment extends javax.swing.JDialog {
         lblRAmount.setVisible(false);
         txtChequeNo.setVisible(false);
         txtReceivedAmount.setVisible(false);
-        if (frmType instanceof FrmTransaction || frmType instanceof FrmWholeSaleTransaction) {
-            lblRAmount.setVisible(true);
-            txtReceivedAmount.setVisible(true);
-            lblBal.setVisible(true);
-            lblBalance.setVisible(true);
+//        if (frmType instanceof FrmTransaction || frmType instanceof FrmWholeSaleTransaction) {
+        if (frmType instanceof FrmWholeSaleTransaction) {
+        	lblPayType.setVisible(true);
+        	cmbPayType.setVisible(true);
+        	cmbPayType.setSelectedItem("Credit");
         } else if (frmType instanceof FrmPurchaseOrder) {
             lblPayType.setVisible(true);
             cmbPayType.setVisible(true);
@@ -381,19 +383,39 @@ public class FrmPayment extends javax.swing.JDialog {
         // TODO add your handling code here:
     }                                           
 
-    private void cmbPayTypeActionPerformed(java.awt.event.ActionEvent evt) {                                           
-        if ("Cheque".equals(cmbPayType.getSelectedItem())){
-            lblChqNo.setVisible(true);
-            txtChequeNo.setVisible(true);
-            lblChqDate.setVisible(true);
-            jChqDate.setVisible(true);
-        } else {
-            lblChqNo.setVisible(false);
-            txtChequeNo.setVisible(false);
-            lblChqDate.setVisible(false);
-            jChqDate.setVisible(false); 
-        }
-    }                                          
+	private void cmbPayTypeActionPerformed(java.awt.event.ActionEvent evt) {
+		if ("Cheque".equals(cmbPayType.getSelectedItem())) {
+			lblChqNo.setVisible(true);
+			txtChequeNo.setVisible(true);
+			lblChqDate.setVisible(true);
+			jChqDate.setVisible(true);
+			
+			lblRAmount.setVisible(false);
+			txtReceivedAmount.setVisible(false);
+			lblBal.setVisible(false);
+			lblBalance.setVisible(false);
+		} else if ("Cash".equals(cmbPayType.getSelectedItem())) {
+			lblRAmount.setVisible(true);
+			txtReceivedAmount.setVisible(true);
+			lblBal.setVisible(true);
+			lblBalance.setVisible(true);
+			
+			lblChqNo.setVisible(false);
+			txtChequeNo.setVisible(false);
+			lblChqDate.setVisible(false);
+			jChqDate.setVisible(false);
+		} else {
+			lblChqNo.setVisible(false);
+			txtChequeNo.setVisible(false);
+			lblChqDate.setVisible(false);
+			jChqDate.setVisible(false);
+			
+			lblRAmount.setVisible(false);
+			txtReceivedAmount.setVisible(false);
+			lblBal.setVisible(false);
+			lblBalance.setVisible(false);
+		}
+	}                                         
 
     private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {                                          
             dispose();

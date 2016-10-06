@@ -210,7 +210,7 @@ public class TransactionDataAccess {
             resultSet = getResultSet(sql);
             while (resultSet.next()) {
                 proxy = new WholeSale();
-                proxy.setInvoiceId(resultSet.getInt("invoice_id"));
+                proxy.setInvoiceId(resultSet.getInt("tran_id"));
                 proxy.setTotalAmount(resultSet.getInt("total_amount"));
                 proxy.setDiscount(resultSet.getInt("discount"));
                 proxy.setReciptDate(resultSet.getDate("recipt_date"));

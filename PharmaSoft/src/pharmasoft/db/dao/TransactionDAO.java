@@ -69,7 +69,7 @@ public class TransactionDAO {
     }
      
      public Vector<WholeSale> getOsDataByCusId(int cusId, String osDate){
-        String osDataSql = "SELECT * FROM whole_sale where customer_id = " + cusId + " AND recipt_date < '" + osDate + "'";
+        String osDataSql = "SELECT * FROM transaction where customer_id = " + cusId + " AND trn_type = 'WS' AND recipt_date < '" + osDate + "'";
         
        return transDataAccess.getOutStandingData(osDataSql, cusId);  
      }
